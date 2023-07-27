@@ -27,7 +27,7 @@ task_params:
 dir_params:
   root: /path/to/musdb18hq
   output_directory: /path/to/results
-  exp_name: convtasnet_git_check # you MUST specify this
+  exp_name: convtasnet_6_s # you MUST specify this
   resume: null # "path of checkpoint folder"
   continual_train: false # when we want to use a pre-trained model but not want to use lr_scheduler history.
   delimit_valid_root: null

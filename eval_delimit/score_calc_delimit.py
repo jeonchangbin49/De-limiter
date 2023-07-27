@@ -42,13 +42,13 @@ parser.add_argument(
     help="target source. all, vocals, drums, bass, other, 0.5_mixed",
 )
 parser.add_argument(
-    "--root", type=str, default="/data2/personal/jeon/delimit/data/musdb_hq_loudnorm"
+    "--root", type=str, default="/path/to/musdb18hq_loudnorm"
 )
-parser.add_argument("--exp_name", type=str, default="convtasnet_35")
+parser.add_argument("--exp_name", type=str, default="convtasnet_6_s")
 parser.add_argument(
     "--output_directory",
     type=str,
-    default="/data2/personal/jeon/delimit/results",
+    default="/path/to/results",
 )
 parser.add_argument("--loudnorm_lufs", type=float, default=-14.0)
 parser.add_argument(
@@ -79,7 +79,6 @@ else:
 if args.target == "all" or args.target == "0.5_mixed":
     test_tracks = glob.glob(f"{args.root}/*/mixture.wav")
 else:
-    # test_tracks = musdb.DB(root=args.root, subsets="test", is_wav=True)
     test_tracks = glob.glob(f"{args.root}/*/{args.target}.wav")
 i = 0
 
@@ -89,12 +88,6 @@ list_multi_mse = []
 for track in tqdm.tqdm(test_tracks):
     if args.target == "all":  # for standard de-limiter estimation
         audio_name = os.path.basename(os.path.dirname(track))
-        # gt_source = (
-        #     track.targets["vocals"].audio
-        #     + track.targets["drums"].audio
-        #     + track.targets["bass"].audio
-        #     + track.targets["other"].audio
-        # )
         gt_source = librosa.load(track, sr=args.sample_rate, mono=False)[0]
 
         est_delimiter = librosa.load(

@@ -10,8 +10,8 @@ from dataloader import DelimitValidDataset
 
 def main():
     # Parameters
-    data_path = "/data1/Music/musdb18hq"
-    save_path = "/data2/personal/jeon/delimit/data/musdb18hq_limited_L"
+    data_path = "/path/to/musdb18hq"
+    save_path = "/path/to/musdb18hq_limited_L"
     batch_size = 1
     num_workers = 1
     sr = 44100

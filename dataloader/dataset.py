@@ -1,4 +1,4 @@
-# Dataloader from https://github.com/jeonchangbin49/LimitAug
+# Dataloader based on https://github.com/jeonchangbin49/LimitAug
 import os
 from glob import glob
 import random

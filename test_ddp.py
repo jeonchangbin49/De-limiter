@@ -46,18 +46,18 @@ def separate_track_with_model(
 def main():
     parser = argparse.ArgumentParser(description="model test.py")
 
-    parser.add_argument("--target", type=str, default=None)
-    parser.add_argument("--data_root", type=str, default="/data1/Music/musdb_XL")
+    parser.add_argument("--target", type=str, default="all")
+    parser.add_argument("--data_root", type=str, default="/path/to/musdb_XL")
     parser.add_argument(
         "--use_musdb",
         type=str2bool,
         default=True,
         help="Use musdb test data or just want to inference other samples?",
     )
-    parser.add_argument("--exp_name", type=str, default=None)
+    parser.add_argument("--exp_name", type=str, default="delimit_6_s')
     parser.add_argument("--manual_output_name", type=str, default=None)
     parser.add_argument(
-        "--output_directory", type=str, default="/data2/personal/jeon/delimit/results"
+        "--output_directory", type=str, default="/path/to/results"
     )
     parser.add_argument("--use_gpu", type=str2bool, default=True)
     parser.add_arugment("--save_name_as_target", type=str2bool, default=True)

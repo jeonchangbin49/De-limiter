@@ -80,7 +80,6 @@ class BaseEncoderMaskerDecoder_mixture_consistency(BaseEncoderMaskerDecoder):
         shape = jitable_shape(wav)
         # Reshape to (batch, n_mix, time)
         wav = _unsqueeze_to_3d(wav)
-        # print('wav shape : ', wav.shape)
 
         # Real forward
         tf_rep = self.forward_encoder(wav)
@@ -220,26 +219,17 @@ class BaseEncoderMaskerDecoderWithConfigsMultiChannelAsteroid(BaseEncoderMaskerD
 
         if self.nb_channels == 2:
             tf_rep = rearrange(tf_rep, "b (c f) t -> b c f t", c=self.nb_channels)
-        # print(tf_rep.shape)  # [8,2,512,2755]
-        # print(est_masks.shape)  # [8,2,512,2755]
 
         if self.apply_mask:
-            # masked_tf_rep = self.apply_masks(tf_rep, est_masks) # est_masks * tf_rep.unsqueeze(1)
             # Since original asteroid implementation of masking includes unnecessary unsqueeze operation, we will do it manually.
             masked_tf_rep = est_masks * tf_rep
         else:
             masked_tf_rep = est_masks
 
-        # print(masked_tf_rep.shape)  # [8,8,2,512,2755]
-
         if self.use_decoder:
-            # if self.nb_channels == 2:
-            #     masked_tf_rep = rearrange(masked_tf_rep, "b c f t -> b (c f) t")
             decoded = self.forward_decoder(masked_tf_rep)
             reconstructed = pad_x_to_y(decoded, wav)
             reconstructed = self.act_after_dec(reconstructed)
-            # print(masked_tf_rep.shape) [8,8,2,512,2755]
-            # print(reconstructed.shape) [8,8,2,176400]
 
             return masked_tf_rep, _shape_reconstructed(reconstructed, shape)
 

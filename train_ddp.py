@@ -30,8 +30,7 @@ def worker(gpu, solver, ngpus_per_node, args):
     args.gpu = gpu
     args.ngpus_per_node = ngpus_per_node
 
-    solver.set_gpu(args)  # 여기서 resume도 일어남.
-    # rank라는 것은 8개의 process들 사이의 우선순위를 의미 함.
+    solver.set_gpu(args)
 
     start_epoch = solver.start_epoch
 

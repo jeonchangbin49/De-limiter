@@ -65,14 +65,13 @@ parser = argparse.ArgumentParser(description="Preprocess audio files for trainin
 parser.add_argument(
     "--root",
     type=str,
-    default="/Users/jeon/Desktop/pythonpractice/musdb18hq",
+    default="/path/to/musdb18hq",
     help="Root directory",
 )
 parser.add_argument(
     "--output",
     type=str,
-    # default="/Users/jeon/Desktop/pythonpractice/delimit/data",
-    default="/Volumes/Samsung_T5/personal/data/delimit",
+    default="/path/to/musdb-XL-train",
     help="Where to save output files",
 )
 parser.add_argument(
@@ -175,47 +174,9 @@ else:
                 next(reader)
                 vst_params.extend([row for row in reader])
 
-        # Load the song name and vst parameters (vst.max_threshold and vst.max_character) from a csv file
-        # vst_dict = {}
-        # with open(f"{args.output}/ozone_train_random.csv", "r") as f:
-        #     reader = csv.reader(f)
-        #     next(reader)
-        #     vst_params = [row for row in reader]
-        # for row in reader:
-        #     vst_dict[row[0]] = {
-        #         "max_threshold": float(row[1]),
-        #         "max_character": float(row[2]),
-        #         "vocals": {
-        #             "name": row[3],
-        #             "start_sec": float(row[4]),
-        #             "gain": float(row[5]),
-        #             "channelswap": bool(row[6]),
-        #         },
-        #         "bass": {
-        #             "name": row[7],
-        #             "start_sec": float(row[8]),
-        #             "gain": float(row[9]),
-        #             "channelswap": bool(row[10]),
-        #         },
-        #         "drums": {
-        #             "name": row[11],
-        #             "start_sec": float(row[12]),
-        #             "gain": float(row[13]),
-        #             "channelswap": bool(row[14]),
-        #         },
-        #         "other": {
-        #             "name": row[15],
-        #             "start_sec": float(row[16]),
-        #             "gain": float(row[17]),
-        #             "channelswap": bool(row[18]),
-        #         },
-        #     }
-    # elif os.path.exists(f"{args.output}/ozone_train_random.json"):
-    #     with open(f"{args.output}/ozone_train_random.json", "r") as f:
-    #         vst_dict = json.load(f)
     else:
         vst_params = []
-        # vst_dict = {}
+
     song_list = [x for x in song_list if os.path.basename(x) not in valid_list]
 
     os.makedirs(f"{args.output}/ozone_train_random", exist_ok=True)
@@ -296,34 +257,6 @@ else:
                 source_channelswaps["other"],
             ]
         )
-        # vst_dict[seg_name] = {
-        #     "max_threshold": vst.max_threshold,
-        #     "max_character": vst.max_character,
-        #     "vocals": {
-        #         "name": source_song_names["vocals"],
-        #         "start_sec": source_start_secs["vocals"],
-        #         "gain": source_gains["vocals"],
-        #         "channelswap": source_channelswaps["vocals"],
-        #     },
-        #     "bass": {
-        #         "name": source_song_names["bass"],
-        #         "start_sec": source_start_secs["bass"],
-        #         "gain": source_gains["bass"],
-        #         "channelswap": source_channelswaps["bass"],
-        #     },
-        #     "drums": {
-        #         "name": source_song_names["drums"],
-        #         "start_sec": source_start_secs["drums"],
-        #         "gain": source_gains["drums"],
-        #         "channelswap": source_channelswaps["drums"],
-        #     },
-        #     "other": {
-        #         "name": source_song_names["other"],
-        #         "start_sec": source_start_secs["other"],
-        #         "gain": source_gains["other"],
-        #         "channelswap": source_channelswaps["other"],
-        #     },
-        # }
 
         if (n + 1) % 20000 == 0 or n == args.n_samples - 1:
             # We will separate the csv file into multiple files to avoid memory error
@@ -358,9 +291,3 @@ else:
                     vst_params[number * 20000 : (number + 1) * 20000]
                 ):
                     writer.writerow(list_vst_param)
-            # with open(f"{args.output}/ozone_train_random.json", "w") as outfile:
-            #     outfile.write(json.dumps(vst_dict, indent=4, sort_keys=True))
-
-
-# if __name__ == "__main__":
-#     main()

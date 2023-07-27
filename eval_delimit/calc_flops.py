@@ -10,22 +10,19 @@ from models import load_model_with_args
 
 
 # def main():
-parser = argparse.ArgumentParser(description="Demucs Trainer")
+parser = argparse.ArgumentParser(description="FLOPs calculation")
 
-# Put every argumnet in './configs/yymmdd_architecture_number.yaml' and load it.
 parser.add_argument(
-    "-c", "--config", default="default", type=str, help="Name of the setting file."
+    "-c", "--config", default="delimit_6_s", type=str, help="Name of the setting file."
 )
 
 config_args = parser.parse_args()
 
 args = get_config(config_args.config)
-# args = get_config("230402_delimit_convtasnet_35")
 print(args)
 
 with torch.cuda.device(0):
     model = load_model_with_args(args)
-    # print(model)
     batch_size = 1
     flops, macs, params = get_model_profile(
         model=model,  # model
@@ -45,14 +42,3 @@ with torch.cuda.device(0):
     print('flops: ', flops)
     print('macs: ', macs)
     print('params: ', params)
-
-
-# In [7]: flops
-# Out[7]: '8899.46 G'
-
-# In [8]: macs
-# Out[8]: '4448.16 GMACs'
-
-# In [9]: params
-# Out[9]: '2.35 M'
-

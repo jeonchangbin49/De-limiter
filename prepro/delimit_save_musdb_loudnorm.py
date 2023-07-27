@@ -1,4 +1,4 @@
-# Save loudness normalized (-14 LUFS) musdb-XL audio files for delimiter evaluation
+# Save loudness normalized (-14 LUFS) musdb-XL audio files for evaluations of de-limiter
 
 import os
 import argparse
@@ -24,18 +24,16 @@ def main():
         default="mixture",
         help="target source. all, vocals, drums, bass, other",
     )
-    parser.add_argument("--data_root", type=str, default="/data1/Music/musdb_XL")
-    # parser.add_argument("--data_root", type=str, default="/data1/Music/musdb18hq")
+    parser.add_argument("--data_root", type=str, default="/path/to/musdb_XL")
     parser.add_argument(
         "--data_root_hq",
         type=str,
-        default="/data1/Music/musdb18hq",
+        default="/path/to/musdb18hq",
         help="this is used when saving loud-norm stem of musdb-XL")
     parser.add_argument(
         "--output_directory",
         type=str,
-        default="/data2/personal/jeon/delimit/data/musdb_XL_loudnorm",
-        # default="/data2/personal/jeon/delimit/data/musdb_hq_loudnorm",
+        default="/path/to/musdb_XL_loudnorm",
     )
     parser.add_argument(
         "--loudnorm_input_lufs",
@@ -81,7 +79,6 @@ def main():
 
         augmented_gain = None
 
-        # if args.loudnorm_input_lufs:  # If you want to use loud-normalized input
         track_lufs = meter.integrated_loudness(track_audio)
         augmented_gain = args.loudnorm_input_lufs - track_lufs
         if os.path.basename(args.data_root) == "musdb18hq":
@@ -91,7 +88,6 @@ def main():
         elif os.path.basename(args.data_root) == "musdb_XL":
             track_audio = track_audio * db2linear(augmented_gain, eps=0.0)
             if args.target != "mixture":
-                # stem_audio = track.targets[args.target].audio # We are not going to use this to avoid some clipping errors.
                 hq_track = hq_tracks[idx]
                 hq_audio = hq_track.audio
                 hq_stem = hq_track.targets[args.target].audio
@@ -102,10 +98,6 @@ def main():
         sf.write(
             f"{args.output_directory}/{track_name}/{args.target}.wav", track_audio, 44100
         )
-        # if os.path.basename(args.data_root) == "musdb18hq"
-        #   pass
-        # elif os.path.basename(args.data_root) == "musdb_XL":
-        #   (loudnorm_XL / musdb_hq) * hq_stem  => loudnorm_XL_stem
 
         if args.save_16k_mono:
             track_audio_16k_mono = librosa.to_mono(track_audio.T)

@@ -20,14 +20,14 @@ parser.add_argument(
 parser.add_argument(
     "--root",
     type=str,
-    default="/data2/personal/jeon/delimit/data",
+    default="/path/to/musdb18hq_loudnorm",
 )
 parser.add_argument(
     "--output_directory",
     type=str,
-    default="/data2/personal/jeon/delimit/results",
+    default="/path/to/results",
 )
-parser.add_argument("--exp_name", type=str, default="convtasnet_35")
+parser.add_argument("--exp_name", type=str, default="delimit_6_s")
 parser.add_argument(
     "--calc_results",
     type=str2bool,

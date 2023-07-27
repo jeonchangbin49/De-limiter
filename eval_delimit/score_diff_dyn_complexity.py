@@ -1,4 +1,3 @@
-# Calculate SI-SDR, Multi-resolution spectrogram mse score of the pre-inferenced sources
 import os
 import argparse
 import csv
@@ -19,19 +18,19 @@ parser.add_argument(
     "--target",
     type=str,
     default="all",
-    help="target source. all, vocals, drums, bass, other",
+    help="target source. all, vocals, bass, drums, other.",
 )
 parser.add_argument(
     "--root",
     type=str,
-    default="/data2/personal/jeon/delimit/data/musdb_hq_loudnorm",
+    default="/path/to/musdb18hq_loudnorm",
 )
 parser.add_argument(
     "--output_directory",
     type=str,
-    default="/data2/personal/jeon/delimit/results",
+    default="/path/to/results",
 )
-parser.add_argument("--exp_name", type=str, default="convtasnet_35")
+parser.add_argument("--exp_name", type=str, default="convtasnet_6_s")
 parser.add_argument(
     "--calc_results",
     type=str2bool,
@@ -56,17 +55,13 @@ f = open(
     encoding="UTF-8",
 )
 dict_song_score_est = json.loads(f.read())
-# f"{args.test_output_dir}/score_feature_{args.target}.json"
 
 if args.target == "all":
     ref_track_list = glob.glob(f"{args.root}/*/mixture.wav")
-    # dict_song_score_ref = json.loads(f"{args.root}/score_feature.json")
     f = open(f"{args.root}/score_feature.json", encoding="UTF-8")
     dict_song_score_ref = json.loads(f.read())
 else:
-    # ref_track_list = musdb.DB(root=args.root, subsets="test", is_wav=True)
     ref_track_list = glob.glob(f"{args.root}/*/{args.target}.wav")
-    # dict_song_score_ref = json.loads(f"{args.root}/score_feature_{args.target}.json")
     f = open(f"{args.root}/score_feature_{args.target}.json", encoding="UTF-8")
     dict_song_score_ref = json.loads(f.read())
 
@@ -90,4 +85,3 @@ print(
 print("mean: ", np.mean(list_diff_dynamic_complexity))
 print("median: ", np.median(list_diff_dynamic_complexity))
 print("std: ", np.std(list_diff_dynamic_complexity))
-# print(list_diff_dynamic_complexity)

@@ -213,9 +213,8 @@ class DelimitTrainDataset(MusdbTrainDataset):
         # apply linear mix over source index=0
         # and here, linear mixture is a target unlike in MusdbTrainDataset
         mixture = stems.sum(0)
-        # target_lufs = self.sample_target_lufs()
         mixture_limited, mixture_loudnorm = self.get_limitaug_mixture(mixture)
-        # # We will give mixture_limited as an input and mixture_loudnorm as a target to the model.
+        # We will give mixture_limited as an input and mixture_loudnorm as a target to the model.
 
         mixture_limited = np.clip(mixture_limited, -1.0, 1.0)
         mixture_limited = torch.as_tensor(mixture_limited, dtype=torch.float32)
@@ -380,9 +379,6 @@ class OzoneTrainDataset(DelimitTrainDataset):
             mixture_loudnorm = mixture * db2linear(augmented_gain, eps=0.0)
 
         return mixture_limited, mixture_loudnorm
-
-    # def __len__(self):
-    #     return 100
 
 
 class DelimitValidDataset(MusdbValidDataset):
@@ -560,7 +556,6 @@ class OzoneValidDataset(MusdbValidDataset):
         song_name = os.path.basename(track_path)
         for k, source in enumerate(self.sources):
             audio_path = f"{track_path}/{source}.wav"
-            # audio = utils.load_wav_stereo(audio_path, self.sample_rate)
             audio = librosa.load(audio_path, mono=False, sr=self.sample_rate)[0]
             audio_sources.append(audio)
 

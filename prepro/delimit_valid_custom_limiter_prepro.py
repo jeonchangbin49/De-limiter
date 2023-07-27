@@ -10,18 +10,15 @@ from dataloader import DelimitValidDataset
 
 def main():
     # Parameters
-    data_path = "/data1/Music/musdb18hq"
-    # save_path = "/data2/personal/jeon/delimit/data/musdb18hq_limited_custom_limiter"
+    data_path = "/path/to/musdb18hq"
     save_path = (
-        "/data2/personal/jeon/delimit/data/musdb18hq_custom_limiter_fixed_attack"
+        "/path/to/musdb18hq_custom_limiter_fixed_attack"
     )
     batch_size = 1
     num_workers = 1
     sr = 44100
 
     # Dataset
-    # dataset = DelimitValidDataset(root=data_path, use_custom_limiter=True, custom_limiter_attack_range=[2.0,2.0])
-    # With fixed attack
     dataset = DelimitValidDataset(
         root=data_path, use_custom_limiter=True, custom_limiter_attack_range=[2.0, 2.0]
     )

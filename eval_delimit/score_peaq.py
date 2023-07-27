@@ -1,16 +1,9 @@
 # We are going to use PEAQ based on https://github.com/HSU-ANT/gstpeaq
 
 """
-python3 score_peaq.py --exp_name=convtasnet_35 | tee /home/jeon/results/delimit/test/convtasnet_35/score_peaq.txt
+python3 score_peaq.py --exp_name=delimit_6_s | tee /path/to/results/delimit_6_s/score_peaq.txt
 """
 
-"""
-python3 score_peaq.py --exp_name=convtasnet_35_demucs --target=vocals --root=/home/jeon/results/delimit/test/musdb_XL_loudnorm_demucs | tee /home/jeon/results/delimit/test/convtasnet_35_demucs/score_peaq_vocals.txt
-"""
-
-"""
-python3 score_peaq.py --exp_name=musdb_XL_loudnorm --target=mixture --output_directory=/home/jeon/data/musdb_related --calc_results=False | tee /home/jeon/data/musdb_related/musdb_XL_loudnorm/score_peaq_mixture.txt
-"""
 
 
 import os
@@ -39,14 +32,14 @@ parser.add_argument(
 parser.add_argument(
     "--root",
     type=str,
-    default="/home/jeon/data/musdb_related/musdb_XL_loudnorm",
+    default="/path/to/musdb_XL_loudnorm",
 )
 parser.add_argument(
     "--output_directory",
     type=str,
-    default="/home/jeon/results/delimit",
+    default="/path/to/results/",
 )
-parser.add_argument("--exp_name", type=str, default="convtasnet_35")
+parser.add_argument("--exp_name", type=str, default="delimit_6_s")
 parser.add_argument(
     "--calc_results",
     type=str2bool,

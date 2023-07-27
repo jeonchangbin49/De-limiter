@@ -111,13 +111,13 @@ parser.add_argument(
     help="target source. all, vocals, drums, bass, other",
 )
 parser.add_argument(
-    "--root", type=str, default="/data2/personal/jeon/delimit/data/musdb_hq_loudnorm"
+    "--root", type=str, default="/path/to/musdb18hq_loudnorm"
 )
-parser.add_argument("--exp_name", type=str, default="convtasnet_35")
+parser.add_argument("--exp_name", type=str, default="delimit_6_s")
 parser.add_argument(
     "--output_directory",
     type=str,
-    default="/data2/personal/jeon/delimit/results",
+    default="/path/to/results",
 )
 parser.add_argument(
     "--calc_results",
@@ -141,7 +141,6 @@ else:
     if args.target == "all":
         track_list = glob.glob(f"{args.root}/*/mixture.wav")
     else:
-        # track_list = musdb.DB(root=args.root, subsets="test", is_wav=True)
         track_list = glob.glob(f"{args.root}/*/{args.target}.wav")
 
 i = 0
@@ -184,9 +183,6 @@ for track in tqdm.tqdm(track_list):
     dc_score, _ = dynamic_complexity(gt_source_essentia_mono)
     _, _, _, lra_score = loudness_range(gt_source_essentia)
     sc_hertz = spectral_centroid(gt_source_essentia_mono)
-    # sc_hertz = np.mean(
-    #     librosa.feature.spectral_centroid(gt_source_librosa_mono, sr=args.sample_rate)
-    # )
     sf_score = np.mean(librosa.feature.spectral_flatness(gt_source_librosa_mono))
     spectral_crest_score = np.mean(spectral_crest(y=gt_source_librosa_mono))
 
@@ -199,7 +195,6 @@ for track in tqdm.tqdm(track_list):
         "spectral_flatness_score": float(sf_score),
         "spectral_crest_score": float(spectral_crest_score),
     }
-    # print(dict_song_score)
     list_rms.append(rms)
     list_crest_factor.append(crest_factor)
     list_dc_score.append(dc_score)
