@@ -1,0 +1,92 @@
+# For De-limit task, Conv-TasNet. 
+# si_sdr loss
+#  
+# ozone_train_fixed is about 6.36 hours
+# 300,000 segments is about 333.33 hours
+# ratio should be about 0.019
+
+wandb_params:
+  use_wandb: true
+  entity: null # your wandb id
+  project: delimit # your wandb project
+  rerun_id: null # use when you rerun wandb.
+  sweep: false
+
+sys_params:
+  nb_workers: 4
+  seed: 777
+  n_nodes: 1
+  port: null
+  rank: 0
+
+task_params:
+  target: all # choices=["all"]
+  train: true
+  dataset: delimit # choices=["musdb", "delimit"]
+
+dir_params:
+  root: /path/to/musdb18hq
+  output_directory: /path/to/results
+  exp_name: convtasnet_git_check # you MUST specify this
+  resume: null # "path of checkpoint folder"
+  continual_train: false # when we want to use a pre-trained model but not want to use lr_scheduler history.
+  delimit_valid_root: null
+  delimit_valid_L_root: null
+  ozone_root: /path/to/musdb-XL-train # you have to specify data_params.use_fixed
+
+hyperparams:
+  batch_size: 8 # with 1 gpus (we used 2080ti 11GB)
+  epochs: 200
+  optimizer: adamw
+  weight_decay: 0.01
+  lr: 0.00003
+  lr_decay_gamma: 0.5
+  lr_decay_patience: 15
+  patience: 50
+  lr_scheduler: step_lr
+  gradient_clip: 5.0
+  ema: false
+
+data_params:
+  nfft: 4096
+  nhop: 1024
+  nb_channels: 2
+  sample_rate: 44100
+  seq_dur: 4.0
+  singleset_num_frames: null
+  samples_per_track: 128 # "Number of samples per track to use for training."
+  limitaug_method: ozone
+  limitaug_mode: null
+  limitaug_custom_target_lufs: null
+  limitaug_custom_target_lufs_std: null
+  target_loudnorm_lufs: -14.0
+  random_mix: true
+  target_limitaug_mode: null
+  target_limitaug_custom_target_lufs: null
+  target_limitaug_custom_target_lufs_std: null
+  custom_limiter_attack_range: null
+  custom_limiter_release_range: null
+  use_fixed: 0.019 # range 0.0 ~ 1.0 => 1.0 will use fixed Ozoned_mixture training examples only.
+
+model_loss_params:
+  architecture: conv_tasnet_mask_on_output # Sample-wise Gain Inversion (SGI)
+  train_loss_func: [si_sdr]
+  train_loss_scales: [1.]
+  valid_loss_func: [si_sdr]
+  valid_loss_scales: [1.]
+
+conv_tasnet_params:
+  encoder_activation: relu
+  n_filters: 512
+  kernel_size: 128 # about 3ms in 44100Hz
+  stride: 64
+  n_blocks: 5
+  n_repeats: 2
+  bn_chan: 128
+  hid_chan: 512
+  skip_chan: 128
+  # conv_kernel_size:
+  # norm_type:
+  mask_act: relu
+  # causal:
+  decoder_activation: sigmoid
