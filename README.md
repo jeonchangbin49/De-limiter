@@ -1,7 +1,9 @@
 # De-limiter
 An official repository of "Music De-limiter Networks via Sample-wise Gain Inversion", which will be presented in WASPAA 2023.
 
-Demo (https://huggingface.co/spaces/jeonchangbin49/De-limiter)
+You can try the De-limiter with our Demo (https://huggingface.co/spaces/jeonchangbin49/De-limiter)
+
+Audio Samples (https://catnip-leaf-c6a.notion.site/Music-De-limiter-7072c0e725fd42249ff78cbbaedc95d7?pvs=4)
 
 Musdb-XL-train dataset (https://zenodo.org/record/8191153)
 
