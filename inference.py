@@ -117,9 +117,12 @@ def main():
 
     meter = pyln.Meter(44100)
 
-    test_tracks = glob.glob(f"{args.data_root}/*.wav") + glob.glob(
-        f"{args.data_root}/*.mp3"
-    )
+    if os.path.isfile(args.data_root):
+        test_tracks = [f"{args.data_root}"]
+    else:  # if data is folder
+        test_tracks = glob.glob(f"{args.data_root}/*.wav") + glob.glob(
+            f"{args.data_root}/*.mp3"
+        )
 
     for track in tqdm.tqdm(test_tracks):
         track_name = os.path.basename(track).replace(".wav", "").replace(".mp3", "")

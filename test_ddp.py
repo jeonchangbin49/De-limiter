@@ -55,7 +55,7 @@ def main():
         help="Use musdb test data or just want to inference other samples?",
     )
     parser.add_argument("--exp_name", type=str, default="delimit_6_s')
-    parser.add_argument("--manual_output_name", type=str, default=None)
+    parser.add_argument("--manual_output_name", type=str, default=Nogramne)
     parser.add_argument(
         "--output_directory", type=str, default="/path/to/results"
     )

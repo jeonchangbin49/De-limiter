@@ -1,10 +1,9 @@
+git+https://github.com/asteroid-team/asteroid.git@master
 numpy
 librosa
 soundfile
 torch
 torchaudio
-tensorflow
-git+https://github.com/asteroid-team/asteroid.git@master
 matplotlib
 wandb
 musdb
@@ -12,4 +11,4 @@ dotmap
 ema-pytorch
 pedalboard
 einops
-timm
+pyloudnorm
