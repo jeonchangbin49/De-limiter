@@ -7,7 +7,7 @@ Audio Samples (https://catnip-leaf-c6a.notion.site/Music-De-limiter-7072c0e725fd
 
 Musdb-XL-train dataset (https://zenodo.org/record/8191153)
 
-Paper will be added soon.
+Paper (https://arxiv.org/abs/2308.01187)
 
 
 ## Inference
