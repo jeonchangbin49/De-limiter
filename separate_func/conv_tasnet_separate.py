@@ -6,6 +6,7 @@ import pyloudnorm as pyln
 import librosa
 import matplotlib
 import matplotlib.pyplot as plt
+import numpy as np
 
 from dataloader import SingleTrackSet
 from utils import db2linear
@@ -47,6 +48,11 @@ def conv_tasnet_separate(
                 f"{args.test_output_dir}/{track_name}/{args.target}_histogram.png"
             )
         if args.task_params.dataset == "delimit":
+            if args.save_sgi_params:
+                sgi_params_estimates = (
+                    estimates.cpu().detach().numpy().copy()
+                )  # SGI params array
+                sgi_params_estimates = rearrange(sgi_params_estimates, "1 c t -> c t")
             estimates = estimates_vars[0]
 
         estimates = estimates.cpu().detach().numpy()
@@ -59,8 +65,24 @@ def conv_tasnet_separate(
         print("SAVE Loudness normalized OUTPUT ")
         loudness = meter.integrated_loudness(estimates.T)
         estimates = estimates * db2linear(args.save_output_loudnorm - loudness, eps=0.0)
+        if args.save_sgi_params:
+            sgi_params_estimates = sgi_params_estimates * db2linear(
+                args.save_output_loudnorm - loudness, eps=0.0
+            )
     elif augmented_gain != None and args.save_output_loudnorm == None:
         estimates = estimates * db2linear(-augmented_gain, eps=0.0)
+        if args.save_sgi_params:
+            sgi_params_estimates = sgi_params_estimates * db2linear(
+                -augmented_gain, eps=0.0
+            )
+
+    if np.abs(estimates).max() > 1.0 and args.avoid_clipping:
+        print("some values are over 0 dBFS")
+        print("normalize forcefully")
+        max_estimates = np.abs(estimates).max()
+        estimates = estimates / max_estimates
+        if args.save_sgi_params:
+            sgi_params_estimates = sgi_params_estimates / max_estimates
 
     sf.write(
         f"{args.test_output_dir}/{track_name}/{args.target}.wav"
@@ -69,6 +91,12 @@ def conv_tasnet_separate(
         estimates.T,
         samplerate=args.data_params.sample_rate,
     )
+
+    if args.save_sgi_params:
+        np.save(
+            f"{args.test_output_dir}/{track_name}/sgi_params.npy",
+            sgi_params_estimates,
+        )
 
     if args.save_16k_mono:
         estimates_16k_mono = librosa.to_mono(estimates)

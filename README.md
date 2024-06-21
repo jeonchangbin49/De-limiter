@@ -1,14 +1,19 @@
 # De-limiter
-An official repository of "Music De-limiter Networks via Sample-wise Gain Inversion", which will be presented in WASPAA 2023.
+An official repository of "Music De-Limiter Networks via Sample-wise Gain Inversion", which was presented at WASPAA 2023.
 
 You can try the De-limiter with our Demo (https://huggingface.co/spaces/jeonchangbin49/De-limiter)
 
 Audio Samples (https://catnip-leaf-c6a.notion.site/Music-De-limiter-7072c0e725fd42249ff78cbbaedc95d7?pvs=4)
 
-Musdb-XL-train dataset (https://zenodo.org/record/8191153)
+Musdb-XL-train dataset (https://zenodo.org/records/12194067)
 
 Paper (https://arxiv.org/abs/2308.01187)
 
+
+## Note (June 21, 2024)
+While working on my PhD thesis, I discovered some errors in the proposed dataset and mistakes in my training codes. Specifically, about 7% of the training data (ozone_seg_0.wav ~ ozone_seg_20000.wav) had slight phase shift problems, and the channel-swapping function in the training data loader was misused.
+
+Currently, those are corrected. There are some changes on the experimental results in the paper. The model weights in this repo and the huggingface demo page are updated. If you are already using the musdb-XL-train dataset, sorry for the inconvenience, and please check the updated version. 
 
 ## Inference
 All you need to do is just git clone this repository and install some of the requirements, and run the "inference.py" code.

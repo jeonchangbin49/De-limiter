@@ -20,6 +20,7 @@ from utils import (
     load_wav_arbitrary_position_stereo,
     load_wav_specific_position_stereo,
     db2linear,
+    str2bool,
 )
 
 
@@ -273,10 +274,7 @@ class OzoneTrainDataset(DelimitTrainDataset):
         self.ozone_root = ozone_root
         self.use_fixed = use_fixed
         self.list_train_fixed = glob.glob(f"{self.ozone_root}/ozone_train_fixed/*.wav")
-        self.list_train_random = glob.glob(
-            f"{self.ozone_root}/ozone_train_random/*.wav"
-        )
-        self.dict_train_random = {}
+        self.list_dict_train_random = []
 
         # Load information of pre-generated random training examples
         list_csv_files = glob.glob(f"{self.ozone_root}/ozone_train_random_*.csv")
@@ -286,34 +284,38 @@ class OzoneTrainDataset(DelimitTrainDataset):
                 reader = csv.reader(f)
                 next(reader)
                 for row in reader:
-                    self.dict_train_random[row[0]] = {
-                        "max_threshold": float(row[1]),
-                        "max_character": float(row[2]),
-                        "vocals": {
-                            "name": row[3],
-                            "start_sec": float(row[4]),
-                            "gain": float(row[5]),
-                            "channelswap": bool(row[6]),
-                        },
-                        "bass": {
-                            "name": row[7],
-                            "start_sec": float(row[8]),
-                            "gain": float(row[9]),
-                            "channelswap": bool(row[10]),
-                        },
-                        "drums": {
-                            "name": row[11],
-                            "start_sec": float(row[12]),
-                            "gain": float(row[13]),
-                            "channelswap": bool(row[14]),
-                        },
-                        "other": {
-                            "name": row[15],
-                            "start_sec": float(row[16]),
-                            "gain": float(row[17]),
-                            "channelswap": bool(row[18]),
-                        },
-                    }
+                    self.list_dict_train_random.append(
+                        {
+                            row[0]: {
+                                "max_threshold": float(row[1]),
+                                "max_character": float(row[2]),
+                                "vocals": {
+                                    "name": row[3],
+                                    "start_sec": float(row[4]),
+                                    "gain": float(row[5]),
+                                    "channelswap": str2bool(row[6]),
+                                },
+                                "bass": {
+                                    "name": row[7],
+                                    "start_sec": float(row[8]),
+                                    "gain": float(row[9]),
+                                    "channelswap": str2bool(row[10]),
+                                },
+                                "drums": {
+                                    "name": row[11],
+                                    "start_sec": float(row[12]),
+                                    "gain": float(row[13]),
+                                    "channelswap": str2bool(row[14]),
+                                },
+                                "other": {
+                                    "name": row[15],
+                                    "start_sec": float(row[16]),
+                                    "gain": float(row[17]),
+                                    "channelswap": str2bool(row[18]),
+                                },
+                            }
+                        }
+                    )
 
     def __getitem__(self, idx):
         use_fixed_prob = random.random()
@@ -341,16 +343,19 @@ class OzoneTrainDataset(DelimitTrainDataset):
         else:
             # Random examples
             # Load mixture_limited (pre-generated)
-            audio_path = random.choice(self.list_train_random)
-            seg_name = os.path.basename(audio_path).replace(".wav", "")
+            dict_seg = random.choice(self.list_dict_train_random)
+            seg_name = list(dict_seg.keys())[0]
+            audio_path = f"{self.ozone_root}/ozone_train_random/{seg_name}.wav"
+            dict_seg_info = dict_seg[seg_name]
+
             mixture_limited, sr = librosa.load(
                 audio_path, sr=self.sample_rate, mono=False
             )
 
             # Load mixture_unlimited (from the original musdb18, using metadata)
             audio_sources = []
+
             for source in self.sources:
-                dict_seg_info = self.dict_train_random[seg_name]
                 dict_seg_source_info = dict_seg_info[source]
                 audio_path = (
                     f"{self.root}/train/{dict_seg_source_info['name']}/{source}.wav"

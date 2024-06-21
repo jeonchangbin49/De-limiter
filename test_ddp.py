@@ -54,11 +54,9 @@ def main():
         default=True,
         help="Use musdb test data or just want to inference other samples?",
     )
-    parser.add_argument("--exp_name", type=str, default="delimit_6_s')
-    parser.add_argument("--manual_output_name", type=str, default=Nogramne)
-    parser.add_argument(
-        "--output_directory", type=str, default="/path/to/results"
-    )
+    parser.add_argument("--exp_name", type=str, default="delimit_6_s")
+    parser.add_argument("--manual_output_name", type=str, default=None)
+    parser.add_argument("--output_directory", type=str, default="/path/to/results")
     parser.add_argument("--use_gpu", type=str2bool, default=True)
     parser.add_arugment("--save_name_as_target", type=str2bool, default=True)
     parser.add_argument(
@@ -86,6 +84,12 @@ def main():
         help="Save loudness normalized outputs or not. If you want to save, input target loudness",
     )
     parser.add_argument(
+        "--avoid_clipping",
+        type=str2bool,
+        default=True,
+        help="Forcefully normalize an output by np.abs(wav).max() if there exist some values that exceed 0 dBFS",
+    )
+    parser.add_argument(
         "--save_mixed_output",
         type=float,
         default=None,
@@ -102,6 +106,12 @@ def main():
         type=str2bool,
         default=False,
         help="Save histogram of the output. Only valid when the task is 'delimit'",
+    )
+    parser.add_argument(
+        "--save_sgi_params",
+        type=str2bool,
+        default=False,
+        help="Save SGI params for further analysis",
     )
 
     args, _ = parser.parse_known_args()
