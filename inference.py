@@ -85,6 +85,18 @@ def main():
         default=False,
         help="Use SingleTrackSet if input data is too long.",
     )
+    parser.add_argument(
+        "--save_sgi_params",
+        type=str2bool,
+        default=False,
+        help="Save SGI params for further analysis",
+    )
+    parser.add_argument(
+        "--avoid_clipping",
+        type=str2bool,
+        default=True,
+        help="Forcefully normalize an output by np.abs(wav).max() if there exist some values that exceed 0 dBFS",
+    )
 
     args, _ = parser.parse_known_args()
 
