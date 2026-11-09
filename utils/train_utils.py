@@ -20,7 +20,7 @@ def str2bool(v):
 
 def get_config(config_name="default"):
 
-    with open(f"./configs/{config_name}.yaml", "r") as f:
+    with open(f"./configs/{config_name}.yaml", "r", encoding="utf-8") as f:
 
         config = yaml.load(f, Loader=yaml.FullLoader)
     config = DotMap(config)
